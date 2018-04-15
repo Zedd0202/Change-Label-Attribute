@@ -23,7 +23,24 @@ class ViewController: UIViewController {
             myLabelAdjustFont(text, size: 50, range: range )
         }
     
-        
+    }
+    //일치하는 모든 문자열의 attribute를 바꾸고 싶다면
+    func changeAllMatches(for pattern: String, in text: String) -> NSMutableAttributedString? {
+        let attrStr = NSMutableAttributedString(string: text)
+        do {
+            let regex = try NSRegularExpression(pattern: pattern, options: [.caseInsensitive])
+            
+            let results = regex.matches(in: text,
+                                        range: NSRange(location:0, length:text.count))
+            results.forEach({ (matches) in
+                attrStr.addAttribute(NSForegroundColorAttributeName, value: UIColor.blue, range: matches.range)
+            })
+            
+        } catch let error {
+            print("invalid pattern: \(error.localizedDescription)")
+            return nil
+        }
+        return  attrStr
     }
 
     func myLabelAdjustFont(_ text:String, size : CGFloat, range : NSRange){
